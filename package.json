@@ -1,0 +1,20 @@
+{
+  "name": "curso-api-rest-themoviedb",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/danielhb90/curso-api-rest-TheMovieDB#readme",
+  "bugs": {
+    "url": "https://github.com/danielhb90/curso-api-rest-TheMovieDB/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielhb90/curso-api-rest-TheMovieDB.git"
+  },
+  "license": "MIT",
+  "author": "@danielbh90",
+  "type": "commonjs",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
