@@ -140,4 +140,4 @@ vite.config.ts.timestamp-*
 
 
 # Secrets.js (API_KEY)
-src/secrets.js
+# src/secrets.js
