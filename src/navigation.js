@@ -1,3 +1,8 @@
+//variables necesarias para paginacion
+let maxPage;
+let page = 1;
+let infiniteScroll;
+
 
 // Habilitar funciones de botones
 searchFormBtn.addEventListener('click', ()=>{
@@ -15,9 +20,17 @@ arrowBtn.addEventListener('click', ()=>{
 // EventListeners para manejo de Hash
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
+// Evento para crear scroll infinito
+window.addEventListener('scroll', infiniteScroll, false);
 
 function navigator() {
     console.log({ location });
+
+    //Condicional para reiniciar y asignar valor a la variable infiniteScroll
+    if (infiniteScroll) {
+        window.removeEventListener('scroll', infiniteScroll, { passive: false });
+        infiniteScroll = undefined;
+    }
 
     if (location.hash.startsWith('#trends')) {
         trendsPage();
@@ -33,6 +46,13 @@ function navigator() {
     // hacer que la navegacion siempre comience desde el principio
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+
+
+    //Condicional para reiniciar y asignar valor a la variable infiniteScroll
+    if (infiniteScroll) {
+        window.addEventListener('scroll', infiniteScroll, { passive: false });
+    }
+
 }
 
 function homePage() {
@@ -51,8 +71,13 @@ function homePage() {
     genericSection.classList.add('inactive');
     movieDetailSection.classList.add('inactive');
 
+    likedMoviesSection.classList.remove('inactive');
+
     getTrendingMoviesPreview();
     getCategoriesPreview();
+    getLikedMovies();
+
+    console.log(navigator.language);
 }
 
 function categoriesPage() {
@@ -71,6 +96,8 @@ function categoriesPage() {
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
 
+    likedMoviesSection.classList.add('inactive');
+
     // Llamar a la funcion que muestre la informacion correcta de la API
     //const [ , urlCategoryInfo] = location.hash.split('=') // ['#category', 'id-name']
     const urlCategory = decodeURI(location.hash)
@@ -78,6 +105,10 @@ function categoriesPage() {
     const [categoryID , categoryName ] = urlCategoryInfo.split('-') // ['id', 'name']
     getMoviesByCategory(categoryID);
     headerCategoryTitle.innerHTML = categoryName;
+
+    getMoviesByCategory(categoryID)
+
+    infiniteScroll = getPaginatedMoviesByCategory(categoryID);
 
 }
 
@@ -96,6 +127,8 @@ function movieDetailsPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericSection.classList.add('inactive');
     movieDetailSection.classList.remove('inactive');
+
+    likedMoviesSection.classList.add('inactive');
 
     // Llamar a la funcion que muestre la informacion correcta de la API
     const [ , movieId] = location.hash.split('=') // ['#movie', 'idMovie']
@@ -119,9 +152,13 @@ function searchPage() {
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
 
+    likedMoviesSection.classList.add('inactive');
+
     // Llamar a la funcion que muestre la informacion correcta de la API
     const [ , queryMovie] = location.hash.split('=') // ['#search', 'searchMovie']
     getMoviesBySearch(queryMovie);
+
+    infiniteScroll = getPaginatedMoviesBySearch(queryMovie);
 
 }
 
@@ -141,7 +178,11 @@ function trendsPage() {
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
 
+    likedMoviesSection.classList.add('inactive');
+
     headerCategoryTitle.innerHTML = 'Tendencias';
 
     getTrendingMovies();
+    
+    infiniteScroll = getPaginatedTrendingMovies;
 }
